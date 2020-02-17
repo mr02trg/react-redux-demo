@@ -9,5 +9,8 @@ In the project directory, you can run:
 Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-#### Content
+## Content
 This project will capture all the core concept demonstrating how to build a react-redux application
+
+## Acknowledgement
+This demonstration is me following "Building Applications with React and Redux" course by Cory House on Plural Sight 
