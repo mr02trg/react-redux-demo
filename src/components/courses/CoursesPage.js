@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as courseActions from "../../redux/actions/courseActions";
-
+import * as courseActions from '../../redux/actions/courseActions';
+import * as authorActions from '../../redux/actions/authorActions';
 import { bindActionCreators } from 'redux';
+import CourseList from './CourseList';
 
 class CoursesPage extends React.Component {
 
@@ -13,6 +14,17 @@ class CoursesPage extends React.Component {
                 title: ""
             }
         };
+    }
+
+    // load courses from api when component is mounted
+    componentDidMount() {
+        this.props.actions.loadCourses().catch(error => {
+            alert("Loading courses failed " + error);
+        })
+
+        this.props.actions.loadAuthors().catch(error => {
+            alert("Loading authors failed " + error);
+        });
     }
 
 
@@ -47,7 +59,8 @@ class CoursesPage extends React.Component {
                     </div>
                     <button className="btn btn-primary">Save</button>
                 </form>
-                {this.props.courses.map(x => (<div key={x.title}>{x.title}</div>) )}
+                {/* {this.props.courses.map(x => (<div key={x.title}>{x.title}</div>) )} */}
+                <CourseList courses={this.props.courses} />
             </div>
         )
     }
@@ -70,7 +83,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
 function mapStateToProps(state, ownProps) {
     // debugger;
     return {
-        courses: state.courses
+        courses: 
+        state.authors.length === 0 ?
+        [] :
+        state.courses.map(course => {
+            return {
+                ...course,
+                authorName: state.authors.find(x => x.id === course.authorId).name
+            }
+        }),
+        authors: state.authors
     }
 }
 
@@ -84,6 +106,9 @@ function mapDispatchToProps(dispatch) {
 
         // METHOD 3 - this is by far the best method
         // bind all courseAction methods to dispatch
-        actions: bindActionCreators(courseActions, dispatch)
+        actions: {
+            loadCourses: bindActionCreators(courseActions.loadCourses, dispatch),
+            loadAuthors: bindActionCreators(authorActions.loadAuthors, dispatch)
+        } 
     }
 }
