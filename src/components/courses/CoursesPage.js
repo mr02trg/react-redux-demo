@@ -4,15 +4,14 @@ import * as courseActions from '../../redux/actions/courseActions';
 import * as authorActions from '../../redux/actions/authorActions';
 import { bindActionCreators } from 'redux';
 import CourseList from './CourseList';
+import { Redirect } from 'react-router-dom';
 
 class CoursesPage extends React.Component {
 
     constructor() {
         super();
         this.state = {
-            course: {
-                title: ""
-            }
+            redirectToAddCoursePage: false
         };
     }
 
@@ -47,17 +46,14 @@ class CoursesPage extends React.Component {
     render() {
         return (
             <div>
+                {this.state.redirectToAddCoursePage && <Redirect to="/course" />}
                 <form onSubmit={this.handleSubmit}>
                     <h2>Courses</h2>
-                    <h3>Add Course</h3>
-                    <div className="form-group">
-                        <input
-                            type="text"
-                            onChange={this.handleChange}
-                            value={this.state.course.title}
-                        /> 
-                    </div>
-                    <button className="btn btn-primary">Save</button>
+
+                    <button 
+                        className="btn btn-primary"
+                        onClick={() => this.setState({redirectToAddCoursePage: true})}
+                    >Add Course</button>
                 </form>
                 {/* {this.props.courses.map(x => (<div key={x.title}>{x.title}</div>) )} */}
                 <CourseList courses={this.props.courses} />
